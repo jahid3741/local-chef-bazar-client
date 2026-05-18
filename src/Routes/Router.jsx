@@ -3,6 +3,8 @@ import MainLayout from "../Layouts/MainLayout/MainLayout";
 import Login from "../Auth/Login/Login";
 import Register from "../Auth/Register/Register";
 import Meals from "../Pages/Meals/Meals";
+import PrivateRoute from "./PrivateRoute/PrivateRoute";
+import MealDetails from "../Pages/MealDetails/MealDetails";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +30,14 @@ const router = createBrowserRouter([
       {
         path: "meals",
         element: <Meals />,
+      },
+      {
+        path: "meals/:id",
+        element: (
+          <PrivateRoute>
+            <MealDetails />
+          </PrivateRoute>
+        ),
       },
     ],
   },

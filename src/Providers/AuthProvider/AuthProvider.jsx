@@ -8,8 +8,6 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 
-
-
 import axiosPublic from "../../Api/AxiosPublic/AxiosPublic";
 import auth from "../../Firebase/Firebase.config";
 
@@ -62,6 +60,11 @@ const AuthProvider = ({ children }) => {
           })
           .then(() => {
             setLoading(false);
+          })
+          .catch((error) => {
+            console.log(error);
+
+            setLoading(false);
           });
       } else {
         axiosPublic
@@ -73,6 +76,11 @@ const AuthProvider = ({ children }) => {
             },
           )
           .then(() => {
+            setLoading(false);
+          })
+          .catch((error) => {
+            console.log(error);
+
             setLoading(false);
           });
       }
