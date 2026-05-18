@@ -24,28 +24,41 @@ const Register = () => {
   const onSubmit = async (data) => {
     try {
       // firebase register
-      const result = await createUser(data.email, data.password);
+      await createUser(data.email, data.password);
 
       // update firebase profile
       await updateUserProfile({
         displayName: data.name,
+
         photoURL: data.image,
       });
 
-      // save user to database
+      // save user in mongodb
       const userInfo = {
         name: data.name,
+
         email: data.email,
+
         image: data.image,
+
         address: data.address,
+
+        role: "user",
+
+        status: "active",
+
+        createdAt: new Date().toISOString(),
       };
 
       await axiosPublic.put(`/users/${data.email}`, userInfo);
 
       Swal.fire({
         icon: "success",
+
         title: "Registration Successful",
+
         showConfirmButton: false,
+
         timer: 1500,
       });
 
@@ -55,6 +68,7 @@ const Register = () => {
     } catch (error) {
       Swal.fire({
         icon: "error",
+
         title: error.message,
       });
     }

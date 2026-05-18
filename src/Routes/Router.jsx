@@ -5,6 +5,7 @@ import Register from "../Auth/Register/Register";
 import Meals from "../Pages/Meals/Meals";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import MealDetails from "../Pages/MealDetails/MealDetails";
+import OrderPage from "../Pages/OrderPage/OrderPage";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <MealDetails />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "order/:id",
+        element: (
+          <PrivateRoute>
+            <OrderPage />
           </PrivateRoute>
         ),
       },
