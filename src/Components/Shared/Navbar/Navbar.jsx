@@ -1,7 +1,34 @@
 import { Link, NavLink } from "react-router";
+
 import { FaUtensils } from "react-icons/fa";
 
+import Swal from "sweetalert2";
+import useAuth from "../../../Hooks/UseAuth/UseAuth";
+
+
+
 const Navbar = () => {
+
+  const { user, logOut } = useAuth();
+
+  const handleLogout = () => {
+
+    logOut()
+      .then(() => {
+
+        Swal.fire({
+          icon: "success",
+          title: "Logout Successful",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const navLinks = (
     <>
       <li>
@@ -26,27 +53,37 @@ const Navbar = () => {
         </NavLink>
       </li>
 
-      <li>
-        <NavLink
-          to="/dashboard/my-profile"
-          className={({ isActive }) =>
-            isActive ? "text-primary font-bold" : ""
-          }
-        >
-          Dashboard
-        </NavLink>
-      </li>
+      {user && (
+        <li>
+          <NavLink
+            to="/dashboard/my-profile"
+            className={({ isActive }) =>
+              isActive ? "text-primary font-bold" : ""
+            }
+          >
+            Dashboard
+          </NavLink>
+        </li>
+      )}
     </>
   );
 
   return (
     <div className="bg-base-100 shadow-md sticky top-0 z-50">
+
       <div className="navbar max-w-7xl mx-auto px-4">
+
         {/* navbar start */}
         <div className="navbar-start">
+
           {/* mobile menu */}
           <div className="dropdown">
-            <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn btn-ghost lg:hidden"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
@@ -72,7 +109,10 @@ const Navbar = () => {
           </div>
 
           {/* logo */}
-          <Link to="/" className="flex items-center gap-2">
+          <Link
+            to="/"
+            className="flex items-center gap-2"
+          >
             <FaUtensils className="text-3xl text-primary" />
 
             <div>
@@ -89,6 +129,7 @@ const Navbar = () => {
 
         {/* navbar center */}
         <div className="navbar-center hidden lg:flex">
+
           <ul className="menu menu-horizontal px-1 text-base font-medium gap-2">
             {navLinks}
           </ul>
@@ -96,13 +137,40 @@ const Navbar = () => {
 
         {/* navbar end */}
         <div className="navbar-end gap-2">
-          <Link to="/login" className="btn btn-outline btn-primary btn-sm">
-            Login
-          </Link>
 
-          <Link to="/register" className="btn btn-primary btn-sm text-white">
-            Register
-          </Link>
+          {user ? (
+            <>
+
+              <img
+                src={user?.photoURL}
+                alt="user"
+                className="w-10 h-10 rounded-full object-cover border"
+              />
+
+              <button
+                onClick={handleLogout}
+                className="btn btn-error btn-sm text-white"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="btn btn-outline btn-primary btn-sm"
+              >
+                Login
+              </Link>
+
+              <Link
+                to="/register"
+                className="btn btn-primary btn-sm text-white"
+              >
+                Register
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </div>
