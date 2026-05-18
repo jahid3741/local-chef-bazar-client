@@ -8,9 +8,10 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 
-import auth from "../firebase/firebase.config";
+
 
 import axiosPublic from "../../Api/AxiosPublic/AxiosPublic";
+import auth from "../../Firebase/Firebase.config";
 
 export const AuthContext = createContext(null);
 
