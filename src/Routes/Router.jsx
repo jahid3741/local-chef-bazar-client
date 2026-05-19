@@ -8,6 +8,7 @@ import MealDetails from "../Pages/MealDetails/MealDetails";
 import OrderPage from "../Pages/OrderPage/OrderPage";
 import MyOrders from "../Pages/Dashboard/MyOrders/MyOrders";
 import DashboardLayout from "../Layouts/DashboardLayout/Dashboardlayout";
+import MyProfile from "../Pages/Dashboard/MyProfile/MyProfile";
 
 const router = createBrowserRouter([
   {
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
       {
         path: "/dashboard/my-orders",
         element: <MyOrders />,
+      },
+      {
+        path: "/dashboard/my-profile",
+        element: <MyProfile></MyProfile>,
       },
     ],
   },
