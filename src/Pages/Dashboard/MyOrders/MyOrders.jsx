@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router";
 import useAuth from "../../../Hooks/UseAuth/UseAuth";
 import useAxiosSecure from "../../../Hooks/UseAxiosSecure/UseAxiosSecure";
+
 
 const MyOrders = () => {
   const { user } = useAuth();
@@ -12,70 +14,79 @@ const MyOrders = () => {
   // load orders
   useEffect(() => {
     if (user?.email) {
-      axiosSecure
-        .get(`/orders/user/${user.email}`)
-        .then((res) => {
-          setOrders(res.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      axiosSecure.get(`/orders/user/${user.email}`).then((res) => {
+        setOrders(res.data);
+      });
     }
   }, [axiosSecure, user]);
 
   return (
     <div>
-      <h2 className="text-3xl font-bold mb-8">My Orders</h2>
+      <h2 className="text-3xl font-bold mb-10">My Orders</h2>
 
-      <div className="overflow-x-auto bg-base-100 shadow-xl rounded-xl">
-        <table className="table">
-          <thead>
-            <tr>
-              <th>#</th>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {orders.map((order) => (
+          <div
+            key={order._id}
+            className="bg-base-100 shadow-xl rounded-2xl p-6"
+          >
+            <h2 className="text-2xl font-bold mb-4">{order.mealName}</h2>
 
-              <th>Meal</th>
+            <div className="space-y-2">
+              <p>
+                <span className="font-bold">Order Status:</span>{" "}
+                {order.orderStatus}
+              </p>
 
-              <th>Price</th>
+              <p>
+                <span className="font-bold">Price:</span> ${order.price}
+              </p>
 
-              <th>Quantity</th>
+              <p>
+                <span className="font-bold">Quantity:</span> {order.quantity}
+              </p>
 
-              <th>Total</th>
+              <p>
+                <span className="font-bold">Delivery Time:</span>{" "}
+                {order.estimatedDeliveryTime}
+              </p>
 
-              <th>Status</th>
+              <p>
+                <span className="font-bold">Chef Name:</span> {order.chefName}
+              </p>
 
-              <th>Payment</th>
+              <p>
+                <span className="font-bold">Chef ID:</span> {order.chefId}
+              </p>
 
-              <th>Order Time</th>
-            </tr>
-          </thead>
+              <p>
+                <span className="font-bold">Payment Status:</span>{" "}
+                {order.paymentStatus}
+              </p>
+            </div>
 
-          <tbody>
-            {orders.map((order, index) => (
-              <tr key={order._id}>
-                <td>{index + 1}</td>
+            {/* payment button */}
+            {order.orderStatus === "accepted" &&
+              order.paymentStatus === "pending" && (
+                <Link
+                  to={`/payment/${order._id}`}
+                  className="btn btn-primary mt-6"
+                >
+                  Pay
+                </Link>
+              )}
 
-                <td>{order.mealName}</td>
-
-                <td>${order.price}</td>
-
-                <td>{order.quantity}</td>
-
-                <td>${order.price * order.quantity}</td>
-
-                <td className="capitalize">{order.orderStatus}</td>
-
-                <td className="capitalize">{order.paymentStatus}</td>
-
-                <td>{new Date(order.orderTime).toLocaleDateString()}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+            {/* paid badge */}
+            {order.paymentStatus === "paid" && (
+              <button className="btn btn-success mt-6">Paid</button>
+            )}
+          </div>
+        ))}
       </div>
 
       {orders.length === 0 && (
-        <div className="text-center py-16">
-          <h2 className="text-2xl font-bold">No orders found</h2>
+        <div className="text-center py-20">
+          <h2 className="text-2xl font-bold">No Orders Found</h2>
         </div>
       )}
     </div>

@@ -14,12 +14,16 @@ import FavoriteMeals from "../Pages/Dashboard/MyFavorite/FavoriteMeals";
 import CreateMeal from "../Pages/Dashboard/CreateMeal/CreateMeal";
 import MyMeals from "../Pages/Dashboard/MyMeals/MyMeals";
 import OrderRequests from "../Pages/Dashboard/OrderRequests/OrderRequests";
+import ManageUsers from "../Pages/Dashboard/ManageUsers/ManageUsers";
+import ManageRequests from "../Pages/Dashboard/ManageRequests/ManageRequests";
+import PlatformStatistics from "../Pages/Dashboard/PlatformStatistics/PlatformStatistics";
+import ErrorPage from "../Pages/ErrorPage/ErrorPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout />,
-    errorElement: <div>Not Found</div>,
+    errorElement: <ErrorPage></ErrorPage>,
 
     children: [
       {
@@ -91,6 +95,20 @@ const router = createBrowserRouter([
       {
         path: "order-requests",
         element: <OrderRequests />,
+      },
+      {
+        path: "manage-users",
+        element: <ManageUsers />,
+      },
+
+      {
+        path: "manage-requests",
+        element: <ManageRequests />,
+      },
+
+      {
+        path: "statistics",
+        element: <PlatformStatistics />,
       },
     ],
   },
