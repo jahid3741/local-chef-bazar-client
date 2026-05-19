@@ -18,6 +18,7 @@ import ManageUsers from "../Pages/Dashboard/ManageUsers/ManageUsers";
 import ManageRequests from "../Pages/Dashboard/ManageRequests/ManageRequests";
 import PlatformStatistics from "../Pages/Dashboard/PlatformStatistics/PlatformStatistics";
 import ErrorPage from "../Pages/ErrorPage/ErrorPage";
+import Home from "../Components/Home/Home";
 
 const router = createBrowserRouter([
   {
@@ -28,7 +29,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <div>Home Page</div>,
+        element: <Home></Home>,
       },
 
       {
