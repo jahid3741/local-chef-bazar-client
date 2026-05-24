@@ -1,8 +1,7 @@
 import { Link, NavLink } from "react-router";
-
 import { FaUtensils } from "react-icons/fa";
-
 import Swal from "sweetalert2";
+import { motion } from "framer-motion";
 import useAuth from "../../../Hooks/UseAuth/UseAuth";
 
 const Navbar = () => {
@@ -23,40 +22,28 @@ const Navbar = () => {
       });
   };
 
+  const navLinkStyle = ({ isActive }) =>
+    `relative font-semibold px-4 py-2 rounded-xl transition-all duration-300 flex items-center gap-2 ${
+      isActive
+        ? "text-primary bg-primary/10"
+        : "text-base-content/70 hover:text-primary hover:bg-base-200/50"
+    }`;
+
   const navLinks = (
     <>
       <li>
-        <NavLink
-          to="/"
-          className={({ isActive }) =>
-            isActive ? "text-primary font-bold" : ""
-          }
-        >
+        <NavLink to="/" className={navLinkStyle}>
           Home
         </NavLink>
       </li>
-
       <li>
-        <NavLink
-          to="/meals"
-          className={({ isActive }) =>
-            isActive ? "text-primary font-bold" : ""
-          }
-        >
+        <NavLink to="/meals" className={navLinkStyle}>
           Meals
         </NavLink>
       </li>
-
       {user && (
         <li>
-          <NavLink
-            to="/dashboard"
-            className={({ isActive }) =>
-              isActive
-                ? "text-primary font-bold"
-                : "hover:text-primary duration-200"
-            }
-          >
+          <NavLink to="/dashboard" className={navLinkStyle}>
             Dashboard
           </NavLink>
         </li>
@@ -65,16 +52,23 @@ const Navbar = () => {
   );
 
   return (
-    <div className="bg-base-100 shadow-md sticky top-0 z-50">
-      <div className="navbar max-w-7xl mx-auto px-4">
-        {/* navbar start */}
-        <div className="navbar-start">
-          {/* mobile menu */}
-          <div className="dropdown">
-            <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+    <motion.div
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="sticky top-0 z-50 bg-base-100/80 backdrop-blur-lg border-b border-base-200/50 shadow-sm"
+    >
+      <div className="navbar max-w-7xl mx-auto px-4 lg:px-8 h-20">
+        <div className="navbar-start w-full lg:w-1/3 justify-between lg:justify-start">
+          <div className="dropdown lg:hidden">
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn btn-ghost btn-circle hover:bg-base-200"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
+                className="h-6 w-6 text-base-content"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -83,76 +77,71 @@ const Navbar = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
-                  d="M4 6h16M4 12h8m-8 6h16"
+                  d="M4 6h16M4 12h16M4 18h16"
                 />
               </svg>
             </div>
-
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content mt-3 z-[1] p-3 shadow bg-base-100 rounded-box w-52"
+              className="menu menu-md dropdown-content mt-4 z-[1] p-4 shadow-xl bg-base-100 rounded-2xl w-64 border border-base-200 gap-2"
             >
               {navLinks}
             </ul>
           </div>
 
-          {/* logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <FaUtensils className="text-3xl text-primary" />
-
-            <div>
-              <h2 className="text-xl lg:text-2xl font-bold">
+          <Link to="/" className="flex items-center gap-3 group ml-2 lg:ml-0">
+            <div className="p-2.5 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-xl group-hover:scale-110 transition-all duration-300 shadow-inner">
+              <FaUtensils className="text-2xl text-primary drop-shadow-sm" />
+            </div>
+            <div className="flex flex-col">
+              <h2 className="text-xl lg:text-2xl font-extrabold tracking-tight text-base-content group-hover:text-primary transition-colors duration-300">
                 Local-Chef-Bazar
               </h2>
-
-              <p className="text-xs text-gray-500 hidden lg:block">
+              <p className="text-[10px] font-bold tracking-widest uppercase text-base-content/50 hidden xl:block mt-0.5">
                 Homemade Meals Marketplace
               </p>
             </div>
           </Link>
         </div>
 
-        {/* navbar center */}
-        <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1 text-base font-medium gap-2">
-            {navLinks}
-          </ul>
+        <div className="navbar-center hidden lg:flex w-1/3 justify-center">
+          <ul className="menu menu-horizontal px-1 gap-2">{navLinks}</ul>
         </div>
 
-        {/* navbar end */}
-        <div className="navbar-end gap-2">
+        <div className="navbar-end w-hidden lg:flex w-1/3 gap-4">
           {user ? (
-            <>
-              <img
-                src={user?.photoURL}
-                alt="user"
-                className="w-10 h-10 rounded-full object-cover border"
-              />
-
+            <div className="flex items-center gap-4 bg-base-200/50 py-1.5 px-2 rounded-full border border-base-200 shadow-sm">
+              <div className="avatar">
+                <div className="w-10 h-10 rounded-full ring-2 ring-primary/30 ring-offset-2 ring-offset-base-100 shadow-md">
+                  <img src={user?.photoURL} alt="User avatar" />
+                </div>
+              </div>
               <button
                 onClick={handleLogout}
-                className="btn btn-error btn-sm text-white"
+                className="btn btn-ghost btn-sm text-error hover:bg-error/10 hover:text-error rounded-full px-4 font-bold mr-1"
               >
                 Logout
               </button>
-            </>
+            </div>
           ) : (
-            <>
-              <Link to="/login" className="btn btn-outline btn-primary btn-sm">
+            <div className="flex items-center gap-3">
+              <Link
+                to="/login"
+                className="btn btn-ghost rounded-full px-6 font-bold hover:bg-primary/10 hover:text-primary transition-colors"
+              >
                 Login
               </Link>
-
               <Link
                 to="/register"
-                className="btn btn-primary btn-sm text-white"
+                className="btn btn-primary rounded-full px-8 shadow-lg shadow-primary/30 hover:shadow-primary/50 hover:-translate-y-0.5 transition-all duration-300 border-none font-bold text-white"
               >
                 Register
               </Link>
-            </>
+            </div>
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

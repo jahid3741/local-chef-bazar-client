@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { FaUtensils, FaTruck, FaStar } from "react-icons/fa";
 
 const WhyChooseUs = () => {
@@ -9,7 +10,6 @@ const WhyChooseUs = () => {
       description:
         "Enjoy healthy and delicious homemade meals prepared by experienced local chefs.",
     },
-
     {
       id: 2,
       icon: <FaTruck />,
@@ -17,7 +17,6 @@ const WhyChooseUs = () => {
       description:
         "Quick and reliable food delivery service right to your doorstep.",
     },
-
     {
       id: 3,
       icon: <FaStar />,
@@ -27,35 +26,89 @@ const WhyChooseUs = () => {
     },
   ];
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 40 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
+  };
+
   return (
-    <div className="bg-base-200 py-20">
-      <div className="max-w-7xl mx-auto px-4">
-        {/* heading */}
-        <div className="text-center mb-14">
-          <h2 className="text-4xl font-bold mb-4">Why Choose Us</h2>
+    <div className="bg-base-100 py-24 relative overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute -top-[10%] -left-[5%] w-96 h-96 bg-primary/5 rounded-full blur-[100px]"></div>
+        <div className="absolute -bottom-[10%] -right-[5%] w-96 h-96 bg-secondary/5 rounded-full blur-[100px]"></div>
+      </div>
 
-          <p className="text-gray-500">
-            We provide the best homemade meal experience
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="text-center mb-16 max-w-2xl mx-auto"
+        >
+          <span className="text-primary font-bold tracking-widest uppercase text-sm mb-3 block">
+            Our Features
+          </span>
+          <h2 className="text-4xl md:text-5xl font-extrabold mb-5 text-base-content">
+            Why{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
+              Choose Us
+            </span>
+          </h2>
+          <p className="text-base-content/70 text-lg">
+            We provide the best homemade meal experience, crafted with love and
+            delivered with care.
           </p>
-        </div>
+        </motion.div>
 
-        {/* cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-100px" }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 xl:gap-10"
+        >
           {features.map((feature) => (
-            <div
+            <motion.div
               key={feature.id}
-              className="bg-base-100 shadow-xl rounded-2xl p-8 text-center hover:scale-105 duration-300"
+              variants={itemVariants}
+              whileHover={{ y: -10 }}
+              className="bg-base-100 shadow-lg hover:shadow-2xl border border-base-200/50 rounded-3xl p-10 text-center transition-all duration-300 relative group overflow-hidden"
             >
-              <div className="text-5xl text-primary flex justify-center mb-5">
-                {feature.icon}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-primary/5 rounded-full scale-0 group-hover:scale-[3] transition-transform duration-700 ease-out z-0"></div>
+
+              <div className="relative z-10">
+                <div className="w-20 h-20 mx-auto bg-base-200 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-transparent group-hover:-translate-y-2 transition-all duration-300">
+                  <div className="text-4xl text-primary drop-shadow-sm group-hover:scale-110 transition-transform duration-300">
+                    {feature.icon}
+                  </div>
+                </div>
+
+                <h3 className="text-2xl font-bold mb-4 text-base-content group-hover:text-primary transition-colors duration-300">
+                  {feature.title}
+                </h3>
+
+                <p className="text-base-content/70 leading-relaxed font-medium">
+                  {feature.description}
+                </p>
               </div>
-
-              <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
-
-              <p className="text-gray-500">{feature.description}</p>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </div>
   );

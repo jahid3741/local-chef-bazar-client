@@ -1,16 +1,26 @@
-import { NavLink, Outlet } from "react-router";
+import { NavLink, Outlet, Link } from "react-router";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import {
+  FaUser,
+  FaShoppingBag,
+  FaStar,
+  FaHeart,
+  FaPlus,
+  FaUtensils,
+  FaClipboardList,
+  FaUsers,
+  FaChartPie,
+  FaHome,
+} from "react-icons/fa";
 import useAuth from "../../Hooks/UseAuth/UseAuth";
 import useAxiosSecure from "../../Hooks/UseAxiosSecure/UseAxiosSecure";
 
 const DashboardLayout = () => {
   const { user } = useAuth();
-
   const axiosSecure = useAxiosSecure();
-
   const [role, setRole] = useState("");
 
-  // load role
   useEffect(() => {
     if (user?.email) {
       axiosSecure
@@ -24,97 +34,167 @@ const DashboardLayout = () => {
     }
   }, [axiosSecure, user]);
 
+  const navStyle = ({ isActive }) =>
+    `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium ${
+      isActive
+        ? "bg-primary text-white shadow-lg shadow-primary/40 translate-x-1"
+        : "text-base-content/70 hover:bg-base-200 hover:text-primary hover:translate-x-1"
+    }`;
+
+  const sidebarVariants = {
+    hidden: { opacity: 0, x: -50 },
+    show: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.5,
+        staggerChildren: 0.05,
+        ease: "easeOut",
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, x: -20 },
+    show: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.3 },
+    },
+  };
+
   return (
-    <div className="flex min-h-screen">
-      {/* sidebar */}
-      <div className="w-72 bg-base-200 p-5">
-        <h2 className="text-2xl font-bold mb-8">Dashboard</h2>
+    <div className="flex min-h-screen bg-base-200/30">
+      <motion.div
+        variants={sidebarVariants}
+        initial="hidden"
+        animate="show"
+        className="w-72 bg-base-100 shadow-2xl z-20 sticky top-0 h-screen overflow-y-auto flex flex-col border-r border-base-200"
+      >
+        <div className="p-6 border-b border-base-200/60 sticky top-0 bg-base-100 z-10">
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="p-2.5 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-xl group-hover:scale-110 transition-all duration-300 shadow-inner">
+              <FaUtensils className="text-xl text-primary drop-shadow-sm" />
+            </div>
+            <h2 className="text-2xl font-extrabold tracking-tight text-base-content group-hover:text-primary transition-colors duration-300">
+              Dashboard
+            </h2>
+          </Link>
+        </div>
 
-        <ul className="space-y-3">
-          {/* COMMON */}
-          <li>
-            <NavLink to="/dashboard/my-profile" className="btn w-full">
-              My Profile
-            </NavLink>
-          </li>
+        <div className="p-4 flex-1">
+          <ul className="space-y-2">
+            <motion.li variants={itemVariants}>
+              <NavLink to="/dashboard/my-profile" className={navStyle}>
+                <FaUser className="text-lg" />
+                My Profile
+              </NavLink>
+            </motion.li>
 
-          {/* USER DASHBOARD */}
-          {role === "user" && (
-            <>
-              <li>
-                <NavLink to="/dashboard/my-orders" className="btn w-full">
-                  My Orders
-                </NavLink>
-              </li>
+            {role === "user" && (
+              <>
+                <motion.li variants={itemVariants}>
+                  <NavLink to="/dashboard/my-orders" className={navStyle}>
+                    <FaShoppingBag className="text-lg" />
+                    My Orders
+                  </NavLink>
+                </motion.li>
 
-              <li>
-                <NavLink to="/dashboard/my-reviews" className="btn w-full">
-                  My Reviews
-                </NavLink>
-              </li>
+                <motion.li variants={itemVariants}>
+                  <NavLink to="/dashboard/my-reviews" className={navStyle}>
+                    <FaStar className="text-lg" />
+                    My Reviews
+                  </NavLink>
+                </motion.li>
 
-              <li>
-                <NavLink to="/dashboard/favorites" className="btn w-full">
-                  Favorite Meals
-                </NavLink>
-              </li>
-            </>
-          )}
+                <motion.li variants={itemVariants}>
+                  <NavLink to="/dashboard/favorites" className={navStyle}>
+                    <FaHeart className="text-lg" />
+                    Favorite Meals
+                  </NavLink>
+                </motion.li>
+              </>
+            )}
 
-          {/* CHEF DASHBOARD */}
-          {role === "chef" && (
-            <>
-              <li>
-                <NavLink to="/dashboard/create-meal" className="btn w-full">
-                  Create Meal
-                </NavLink>
-              </li>
+            {role === "chef" && (
+              <>
+                <motion.li variants={itemVariants}>
+                  <NavLink to="/dashboard/create-meal" className={navStyle}>
+                    <FaPlus className="text-lg" />
+                    Create Meal
+                  </NavLink>
+                </motion.li>
 
-              <li>
-                <NavLink to="/dashboard/my-meals" className="btn w-full">
-                  My Meals
-                </NavLink>
-              </li>
+                <motion.li variants={itemVariants}>
+                  <NavLink to="/dashboard/my-meals" className={navStyle}>
+                    <FaUtensils className="text-lg" />
+                    My Meals
+                  </NavLink>
+                </motion.li>
 
-              <li>
-                <NavLink to="/dashboard/order-requests" className="btn w-full">
-                  Order Requests
-                </NavLink>
-              </li>
-            </>
-          )}
+                <motion.li variants={itemVariants}>
+                  <NavLink to="/dashboard/order-requests" className={navStyle}>
+                    <FaClipboardList className="text-lg" />
+                    Order Requests
+                  </NavLink>
+                </motion.li>
+              </>
+            )}
 
-          {/* ADMIN DASHBOARD */}
-          {role === "admin" && (
-            <>
-              <li>
-                <NavLink to="/dashboard/manage-users" className="btn w-full">
-                  Manage Users
-                </NavLink>
-              </li>
+            {role === "admin" && (
+              <>
+                <motion.li variants={itemVariants}>
+                  <NavLink to="/dashboard/manage-users" className={navStyle}>
+                    <FaUsers className="text-lg" />
+                    Manage Users
+                  </NavLink>
+                </motion.li>
 
-              <li>
-                <NavLink to="/dashboard/manage-requests" className="btn w-full">
-                  Manage Requests
-                </NavLink>
-              </li>
+                <motion.li variants={itemVariants}>
+                  <NavLink to="/dashboard/manage-requests" className={navStyle}>
+                    <FaClipboardList className="text-lg" />
+                    Manage Requests
+                  </NavLink>
+                </motion.li>
 
-              <li>
-                <NavLink
-                  to="/dashboard/platform-statistics"
-                  className="btn w-full"
-                >
-                  Platform Statistics
-                </NavLink>
-              </li>
-            </>
-          )}
-        </ul>
-      </div>
+                <motion.li variants={itemVariants}>
+                  <NavLink
+                    to="/dashboard/platform-statistics"
+                    className={navStyle}
+                  >
+                    <FaChartPie className="text-lg" />
+                    Platform Statistics
+                  </NavLink>
+                </motion.li>
+              </>
+            )}
+          </ul>
+        </div>
 
-      {/* content */}
-      <div className="flex-1 p-8">
-        <Outlet />
+        <div className="p-4 border-t border-base-200/60 sticky bottom-0 bg-base-100">
+          <ul className="space-y-2">
+            <motion.li variants={itemVariants}>
+              <Link
+                to="/"
+                className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium text-base-content/70 hover:bg-base-200 hover:text-primary"
+              >
+                <FaHome className="text-lg" />
+                Back to Home
+              </Link>
+            </motion.li>
+          </ul>
+        </div>
+      </motion.div>
+
+      <div className="flex-1 p-6 md:p-10 w-full overflow-hidden">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="h-full bg-base-100 rounded-3xl shadow-xl border border-base-200/50 p-6 md:p-8"
+        >
+          <Outlet />
+        </motion.div>
       </div>
     </div>
   );
