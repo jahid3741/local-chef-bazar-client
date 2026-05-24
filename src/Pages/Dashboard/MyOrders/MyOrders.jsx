@@ -18,12 +18,21 @@ const MyOrders = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true); // Added loading state
 
   useEffect(() => {
     if (user?.email) {
-      axiosSecure.get(`/orders/user/${user.email}`).then((res) => {
-        setOrders(res.data);
-      });
+      setLoading(true); // Start loading
+      axiosSecure
+        .get(`/orders/user/${user.email}`)
+        .then((res) => {
+          setOrders(res.data);
+          setLoading(false); // Stop loading when data arrives
+        })
+        .catch((error) => {
+          console.error("Error fetching orders:", error);
+          setLoading(false); // Stop loading on error
+        });
     }
   }, [axiosSecure, user]);
 
@@ -60,6 +69,18 @@ const MyOrders = () => {
     hidden: { opacity: 0, y: 30 },
     show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
   };
+
+  // Show loading spinner while fetching data
+  if (loading) {
+    return (
+      <div className="flex flex-col justify-center items-center min-h-[400px] gap-4">
+        <span className="loading loading-spinner loading-lg text-primary"></span>
+        <p className="text-base-content/60 font-medium animate-pulse">
+          Fetching your orders...
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">
