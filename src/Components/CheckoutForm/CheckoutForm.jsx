@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
-
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+
+import { useEffect, useState } from "react";
 
 import Swal from "sweetalert2";
 
 import { useNavigate } from "react-router";
-import useAuth from "../../Hooks/UseAuth/UseAuth";
+
 import useAxiosSecure from "../../Hooks/UseAxiosSecure/UseAxiosSecure";
 
+import useAuth from "../../Hooks/UseAuth/UseAuth";
 
 const CheckoutForm = ({ order }) => {
   const stripe = useStripe();
@@ -16,13 +17,11 @@ const CheckoutForm = ({ order }) => {
 
   const navigate = useNavigate();
 
-  const { user } = useAuth();
-
   const axiosSecure = useAxiosSecure();
 
-  const [clientSecret, setClientSecret] = useState("");
+  const { user } = useAuth();
 
-  const [error, setError] = useState("");
+  const [clientSecret, setClientSecret] = useState("");
 
   const [processing, setProcessing] = useState(false);
 
@@ -41,83 +40,76 @@ const CheckoutForm = ({ order }) => {
     }
   }, [axiosSecure, totalPrice]);
 
-  // handle payment
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // submit payment
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-    if (!stripe || !elements) return;
+    if (!stripe || !elements) {
+      return;
+    }
 
     const card = elements.getElement(CardElement);
 
-    if (!card) return;
+    if (!card) {
+      return;
+    }
 
     setProcessing(true);
 
-    // validate card
-    const { error: cardError } = await stripe.createPaymentMethod({
+    // create payment method
+    const { error } = await stripe.createPaymentMethod({
       type: "card",
-
       card,
     });
 
-    if (cardError) {
-      setError(cardError.message);
+    if (error) {
+      Swal.fire({
+        icon: "error",
+        title: error.message,
+      });
 
       setProcessing(false);
 
       return;
     }
-
-    setError("");
 
     // confirm payment
-    const { paymentIntent, error } = await stripe.confirmCardPayment(
-      clientSecret,
-      {
-        payment_method: {
-          card,
+    const result = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card,
 
-          billing_details: {
-            name: user?.displayName || "Anonymous",
+        billing_details: {
+          email: user?.email,
 
-            email: user?.email,
-          },
+          name: user?.displayName,
         },
       },
-    );
+    });
 
-    if (error) {
-      setError(error.message);
-
-      setProcessing(false);
-
-      return;
-    }
-
-    // success payment
-    if (paymentIntent.status === "succeeded") {
+    // payment success
+    if (result.paymentIntent?.status === "succeeded") {
       const paymentData = {
         orderId: order._id,
 
-        transactionId: paymentIntent.id,
+        userEmail: user?.email,
 
         amount: totalPrice,
 
-        userEmail: user?.email,
+        transactionId: result.paymentIntent.id,
 
-        paymentTime: new Date().toISOString(),
+        paymentMethod: "stripe",
       };
 
+      // save payment
       const res = await axiosSecure.post("/payments", paymentData);
 
       if (res.data.paymentResult.insertedId) {
         Swal.fire({
           icon: "success",
-
-          title: "Payment Successful!",
+          title: "Payment Successful",
         });
 
-        navigate("/dashboard/my-orders");
+        navigate("/dashboard/payment-success");
       }
     }
 
@@ -125,20 +117,8 @@ const CheckoutForm = ({ order }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="border rounded-xl p-5">
-        <CardElement
-          options={{
-            style: {
-              base: {
-                fontSize: "16px",
-              },
-            },
-          }}
-        />
-      </div>
-
-      {error && <p className="text-red-500">{error}</p>}
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <CardElement className="border rounded-lg p-4" />
 
       <button
         type="submit"

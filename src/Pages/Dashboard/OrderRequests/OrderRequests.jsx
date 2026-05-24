@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
+
 import Swal from "sweetalert2";
+
 import useAuth from "../../../Hooks/UseAuth/UseAuth";
+
 import useAxiosSecure from "../../../Hooks/UseAxiosSecure/UseAxiosSecure";
 
 const OrderRequests = () => {
@@ -12,28 +15,58 @@ const OrderRequests = () => {
 
   const [chefId, setChefId] = useState("");
 
+  const [loading, setLoading] = useState(true);
+
   // load chef info
   useEffect(() => {
     if (user?.email) {
-      axiosSecure.get(`/users/${user.email}`).then((res) => {
-        setChefId(res.data.chefId);
-      });
+      axiosSecure
+        .get(`/users/${user.email}`)
+        .then((res) => {
+          console.log("Chef User:", res.data);
+
+          if (res.data?.chefId) {
+            setChefId(res.data.chefId);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   }, [axiosSecure, user]);
 
   // load chef orders
   useEffect(() => {
     if (chefId) {
-      axiosSecure.get(`/orders/chef/${chefId}`).then((res) => {
-        setOrders(res.data);
-      });
+      setLoading(true);
+
+      console.log("Fetching orders for:", chefId);
+
+      axiosSecure
+        .get(`/orders/chef/${chefId}`)
+        .then((res) => {
+          console.log("Orders:", res.data);
+
+          setOrders(res.data);
+
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.log(error);
+
+          setLoading(false);
+        });
     }
   }, [axiosSecure, chefId]);
 
-  // update status
+  // update order status
   const handleStatusUpdate = async (id, status) => {
+    console.log("Updating:", id, status);
+
     try {
       const res = await axiosSecure.patch(`/orders/${id}/status`, { status });
+
+      console.log(res.data);
 
       if (res.data.modifiedCount > 0) {
         Swal.fire({
@@ -56,6 +89,8 @@ const OrderRequests = () => {
         setOrders(updatedOrders);
       }
     } catch (error) {
+      console.log(error);
+
       Swal.fire({
         icon: "error",
 
@@ -64,8 +99,17 @@ const OrderRequests = () => {
     }
   };
 
+  // loading
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-[300px]">
+        <span className="loading loading-spinner loading-lg"></span>
+      </div>
+    );
+  }
+
   return (
-    <div>
+    <div className="max-w-7xl mx-auto">
       <h2 className="text-3xl font-bold mb-8">Order Requests</h2>
 
       <div className="overflow-x-auto bg-base-100 shadow-xl rounded-xl">
@@ -112,7 +156,7 @@ const OrderRequests = () => {
                     <>
                       <button
                         onClick={() =>
-                          handleStatusUpdate(order._id, "accepted")
+                          handleStatusUpdate(order?._id, "accepted")
                         }
                         className="btn btn-xs btn-primary"
                       >
@@ -121,7 +165,7 @@ const OrderRequests = () => {
 
                       <button
                         onClick={() =>
-                          handleStatusUpdate(order._id, "cancelled")
+                          handleStatusUpdate(order?._id, "cancelled")
                         }
                         className="btn btn-xs btn-error"
                       >
@@ -132,7 +176,9 @@ const OrderRequests = () => {
 
                   {order.orderStatus === "accepted" && (
                     <button
-                      onClick={() => handleStatusUpdate(order._id, "delivered")}
+                      onClick={() =>
+                        handleStatusUpdate(order?._id, "delivered")
+                      }
                       className="btn btn-xs btn-success"
                     >
                       Delivered

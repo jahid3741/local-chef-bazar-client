@@ -19,6 +19,8 @@ import ManageRequests from "../Pages/Dashboard/ManageRequests/ManageRequests";
 import PlatformStatistics from "../Pages/Dashboard/PlatformStatistics/PlatformStatistics";
 import ErrorPage from "../Pages/ErrorPage/ErrorPage";
 import Home from "../Components/Home/Home";
+import Payment from "../Pages/Payment/Payment";
+import PaymentSuccess from "../Pages/Payment/PaymentSuccess";
 
 const router = createBrowserRouter([
   {
@@ -86,30 +88,38 @@ const router = createBrowserRouter([
         element: <FavoriteMeals></FavoriteMeals>,
       },
       {
-        path: "create-meal",
+        path: "/dashboard/create-meal",
         element: <CreateMeal />,
       },
       {
-        path: "my-meals",
+        path: "/dashboard/my-meals",
         element: <MyMeals />,
       },
       {
-        path: "order-requests",
+        path: "/dashboard/order-requests",
         element: <OrderRequests />,
       },
       {
-        path: "manage-users",
+        path: "/dashboard/manage-users",
         element: <ManageUsers />,
       },
 
       {
-        path: "manage-requests",
+        path: "/dashboard/manage-requests",
         element: <ManageRequests />,
       },
 
       {
-        path: "statistics",
+        path: "/dashboard/platform-statistics",
         element: <PlatformStatistics />,
+      },
+      {
+        path: "payment/:id",
+        element: <Payment />,
+      },
+      {
+        path: "payment-success",
+        element: <PaymentSuccess />,
       },
     ],
   },

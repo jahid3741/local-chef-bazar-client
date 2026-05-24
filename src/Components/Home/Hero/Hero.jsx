@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router";
 
 const Hero = () => {
   return (
@@ -64,7 +65,7 @@ const Hero = () => {
             }}
             className="btn btn-primary btn-lg"
           >
-            Explore Meals
+            <Link to="/meals">Explore Meals</Link>
           </motion.button>
         </div>
       </div>
