@@ -18,20 +18,20 @@ const MyOrders = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
   const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true); // Added loading state
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
     if (user?.email) {
-      setLoading(true); // Start loading
+      setLoading(true); 
       axiosSecure
         .get(`/orders/user/${user.email}`)
         .then((res) => {
           setOrders(res.data);
-          setLoading(false); // Stop loading when data arrives
+          setLoading(false); 
         })
         .catch((error) => {
           console.error("Error fetching orders:", error);
-          setLoading(false); // Stop loading on error
+          setLoading(false); 
         });
     }
   }, [axiosSecure, user]);
@@ -70,7 +70,7 @@ const MyOrders = () => {
     show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
   };
 
-  // Show loading spinner while fetching data
+ 
   if (loading) {
     return (
       <div className="flex flex-col justify-center items-center min-h-[400px] gap-4">
