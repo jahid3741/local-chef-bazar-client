@@ -1,11 +1,31 @@
 import { Link, NavLink } from "react-router";
-import { FaUtensils } from "react-icons/fa";
+import { useEffect, useState } from "react"; 
+import { FaUtensils, FaSun, FaMoon } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
 import useAuth from "../../../Hooks/UseAuth/UseAuth";
 
 const Navbar = () => {
   const { user, logOut } = useAuth();
+
+  // --- THEME TOGGLE LOGIC ---
+  const [theme, setTheme] = useState(
+    localStorage.getItem("theme") ? localStorage.getItem("theme") : "light",
+  );
+
+  useEffect(() => {
+    localStorage.setItem("theme", theme);
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
+
+  const handleThemeToggle = (e) => {
+    if (e.target.checked) {
+      setTheme("dark");
+    } else {
+      setTheme("light");
+    }
+  };
+  // --------------------------
 
   const handleLogout = () => {
     logOut()
@@ -108,9 +128,23 @@ const Navbar = () => {
           <ul className="menu menu-horizontal px-1 gap-2">{navLinks}</ul>
         </div>
 
-        <div className="navbar-end w-hidden lg:flex w-1/3 gap-4">
+        {/* Updated navbar-end to ensure it displays correctly and includes the theme toggle */}
+        <div className="navbar-end flex w-auto lg:w-1/3 gap-2 lg:gap-4 justify-end">
+          {/* THEME TOGGLE BUTTON */}
+          <label className="swap swap-rotate btn btn-ghost btn-circle">
+            <input
+              type="checkbox"
+              onChange={handleThemeToggle}
+              checked={theme === "dark"}
+            />
+            {/* Sun icon */}
+            <FaSun className="swap-off fill-current w-5 h-5 text-amber-500" />
+            {/* Moon icon */}
+            <FaMoon className="swap-on fill-current w-5 h-5 text-blue-300" />
+          </label>
+
           {user ? (
-            <div className="flex items-center gap-4 bg-base-200/50 py-1.5 px-2 rounded-full border border-base-200 shadow-sm">
+            <div className="flex items-center gap-2 lg:gap-4 bg-base-200/50 py-1.5 px-2 rounded-full border border-base-200 shadow-sm hidden md:flex">
               <div className="avatar">
                 <div className="w-10 h-10 rounded-full ring-2 ring-primary/30 ring-offset-2 ring-offset-base-100 shadow-md">
                   <img src={user?.photoURL} alt="User avatar" />
@@ -124,7 +158,7 @@ const Navbar = () => {
               </button>
             </div>
           ) : (
-            <div className="flex items-center gap-3">
+            <div className="items-center gap-2 hidden md:flex">
               <Link
                 to="/login"
                 className="btn btn-ghost rounded-full px-6 font-bold hover:bg-primary/10 hover:text-primary transition-colors"

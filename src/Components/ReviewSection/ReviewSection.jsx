@@ -1,63 +1,50 @@
 import { useEffect, useState } from "react";
-
+import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import useAuth from "../../Hooks/UseAuth/UseAuth";
-import useAxiosSecure from "../../Hooks/UseAxiosSecure/UseAxiosSecure";
+import axiosSecure from "../../Api/AxiosSecure/AxiosSecure";
 
 const ReviewSection = ({ mealId }) => {
   const { user } = useAuth();
-
-  const axiosSecure = useAxiosSecure();
-
   const [reviews, setReviews] = useState([]);
 
-  const [rating, setRating] = useState("");
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
 
-  const [comment, setComment] = useState("");
-
-  // load reviews
   useEffect(() => {
-    axiosSecure.get(`/reviews/meal/${mealId}`).then((res) => {
-      setReviews(res.data);
-    });
-  }, [axiosSecure, mealId]);
+    if (mealId) {
+      axiosSecure.get(`/reviews/meal/${mealId}`).then((res) => {
+        setReviews(res.data);
+      });
+    }
+  }, [mealId]);
 
-  // add review
-  const handleReview = async (e) => {
-    e.preventDefault();
-
+  const onSubmit = async (data) => {
     const reviewData = {
       foodId: mealId,
-
       reviewerName: user?.displayName,
-
       reviewerEmail: user?.email,
-
       reviewerImage: user?.photoURL,
-
-      rating,
-
-      comment,
+      rating: Number(data.rating),
+      comment: data.comment,
     };
 
-    const res = await axiosSecure.post("/reviews", reviewData);
-
-    if (res.data.insertedId) {
-      Swal.fire({
-        icon: "success",
-        title: "Review submitted successfully!",
-      });
-
-      const newReview = {
-        ...reviewData,
-        date: new Date().toISOString(),
-      };
-
-      setReviews([newReview, ...reviews]);
-
-      setRating("");
-
-      setComment("");
+    try {
+      const res = await axiosSecure.post("/reviews", reviewData);
+      if (res.data.insertedId) {
+        Swal.fire({ icon: "success", title: "Review submitted!" });
+        setReviews([
+          { ...reviewData, date: new Date().toISOString() },
+          ...reviews,
+        ]);
+        reset();
+      }
+    } catch (error) {
+      Swal.fire({ icon: "error", title: "Failed to submit review" });
     }
   };
 
@@ -65,65 +52,38 @@ const ReviewSection = ({ mealId }) => {
     <div className="mt-16">
       <h2 className="text-3xl font-bold mb-8">Reviews</h2>
 
-      {/* form */}
+      {/* 4. WRAP FORM WITH handleSubmit */}
       <form
-        onSubmit={handleReview}
+        onSubmit={handleSubmit(onSubmit)}
         className="bg-base-200 p-6 rounded-xl mb-10"
       >
         <div className="mb-4">
           <label className="font-semibold">Rating</label>
-
           <input
             type="number"
-            min="1"
-            max="5"
-            required
-            value={rating}
-            onChange={(e) => setRating(e.target.value)}
+            {...register("rating", { required: true, min: 1, max: 5 })}
             className="input input-bordered w-full mt-2"
           />
+          {errors.rating && (
+            <span className="text-error text-sm">
+              Valid rating (1-5) is required
+            </span>
+          )}
         </div>
 
         <div className="mb-4">
           <label className="font-semibold">Comment</label>
-
           <textarea
-            required
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
+            {...register("comment", { required: true })}
             className="textarea textarea-bordered w-full mt-2"
           ></textarea>
+          {errors.comment && (
+            <span className="text-error text-sm">Comment is required</span>
+          )}
         </div>
 
         <button className="btn btn-primary">Give Review</button>
       </form>
-
-      {/* reviews */}
-      <div className="space-y-6">
-        {reviews.map((review, index) => (
-          <div key={index} className="border p-5 rounded-xl">
-            <div className="flex items-center gap-4 mb-3">
-              <img
-                src={review.reviewerImage}
-                alt=""
-                className="w-14 h-14 rounded-full object-cover"
-              />
-
-              <div>
-                <h3 className="font-bold text-lg">{review.reviewerName}</h3>
-
-                <p className="text-sm text-gray-500">
-                  {new Date(review.date).toLocaleDateString()}
-                </p>
-              </div>
-            </div>
-
-            <p className="mb-2">⭐ {review.rating}/5</p>
-
-            <p>{review.comment}</p>
-          </div>
-        ))}
-      </div>
     </div>
   );
 };
