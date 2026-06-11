@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosSecure = axios.create({
-  baseURL: "https://local-chef-bazaar-server-azure.vercel.app",
+  baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true,
 });
 

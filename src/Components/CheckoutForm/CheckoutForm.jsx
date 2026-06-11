@@ -107,7 +107,7 @@ const CheckoutForm = ({ order }) => {
           confirmButtonColor: "#10b981",
         });
 
-        navigate("/dashboard/payment-success");
+        navigate("/payment-success");
       }
     }
 

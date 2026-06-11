@@ -54,7 +54,7 @@ const PaymentSuccess = () => {
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
           <Link
-            to="/dashboard/my-orders"
+            to="/my-orders"
             className="btn btn-primary rounded-full px-8 shadow-lg shadow-primary/30 hover:shadow-primary/50 hover:-translate-y-1 transition-all duration-300"
           >
             <FiShoppingBag className="text-lg" /> View Orders

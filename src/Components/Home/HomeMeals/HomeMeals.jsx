@@ -69,7 +69,7 @@ const HomeMeals = () => {
           viewport={{ once: true, margin: "-100px" }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 xl:gap-10"
         >
-          {meals.map((meal) => (
+          {meals?.map((meal) => (
             <motion.div key={meal._id} variants={itemVariants}>
               <MealCard meal={meal} />
             </motion.div>

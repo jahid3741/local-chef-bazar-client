@@ -4,15 +4,11 @@ import { Helmet } from "react-helmet-async";
 import Swal from "sweetalert2";
 import useAuth from "../../../Hooks/UseAuth/UseAuth";
 import axiosSecure from "../../../Api/AxiosSecure/AxiosSecure";
-import axiosPublic from "../../../Api/AxiosPublic/AxiosPublic";
-
-const image_hosting_key = import.meta.env.VITE_IMGBB_API_KEY;
-const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
 const CreateMeal = () => {
   const { user } = useAuth();
   const [dbUser, setDbUser] = useState(null);
-  const [isUploading, setIsUploading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     register,
@@ -28,45 +24,46 @@ const CreateMeal = () => {
       });
     }
   }, [user]);
-
   const onSubmit = async (data) => {
-    setIsUploading(true);
+    setIsSubmitting(true);
 
     try {
-      const imageFile = { image: data.image[0] };
-      const res = await axiosPublic.post(image_hosting_api, imageFile, {
-        headers: { "content-type": "multipart/form-data" },
-      });
+      const mealData = {
+        foodName: data.foodName,
+        chefName: user?.displayName || "Unknown Chef",
+        foodImage: data.foodImage,
+        price: Number(data.price),
+        ingredients: data.ingredients.split(",").map((item) => item.trim()),
+        deliveryArea: data.deliveryArea,
+        estimatedDeliveryTime: data.estimatedDeliveryTime,
+        chefExperience: data.chefExperience,
+      };
 
-      if (res.data.success) {
-        const mealData = {
-          foodName: data.foodName,
-          chefName: user?.displayName || "Unknown Chef",
-          foodImage: res.data.data.display_url, // ImgBB URL
-          price: Number(data.price),
-          rating: 0,
-          ingredients: data.ingredients.split(",").map((i) => i.trim()),
-          deliveryArea: data.deliveryArea,
-          estimatedDeliveryTime: data.estimatedDeliveryTime,
-          chefExperience: data.chefExperience,
-          userEmail: user?.email,
-        };
+      const res = await axiosSecure.post("/meals", mealData);
 
-        // 3. Save to MongoDB
-        const menuRes = await axiosSecure.post("/meals", mealData);
-        if (menuRes.data.insertedId) {
-          reset();
-          Swal.fire({ icon: "success", title: "Meal added successfully!" });
-        }
+      if (res.data.insertedId) {
+        reset();
+
+        Swal.fire({
+          icon: "success",
+          title: "Meal added successfully",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       }
     } catch (error) {
       console.error(error);
-      Swal.fire({ icon: "error", title: "Failed to upload meal" });
+
+      Swal.fire({
+        icon: "error",
+        title: "Failed to add meal",
+        text:
+          error?.response?.data?.message || error?.message || "Unknown error",
+      });
     } finally {
-      setIsUploading(false);
+      setIsSubmitting(false);
     }
   };
-
   return (
     <div className="max-w-4xl mx-auto p-8 bg-base-100 shadow-xl rounded-2xl border border-base-200 mt-10">
       <Helmet>
@@ -157,22 +154,22 @@ const CreateMeal = () => {
             </div>
           </div>
 
-          {/* Image Upload (File) */}
+          {/* Image Link (Text Input) */}
           <div className="form-control">
             <label className="label">
               <span className="label-text font-semibold">
-                Upload Food Image
+                Food Image Link (URL)
               </span>
             </label>
             <input
-              type="file"
-              accept="image/*"
-              {...register("image", { required: true })}
-              className="file-input file-input-bordered w-full"
+              type="url"
+              placeholder="https://example.com/image.jpg"
+              {...register("foodImage", { required: true })}
+              className="input input-bordered w-full"
             />
-            {errors.image && (
+            {errors.foodImage && (
               <span className="text-error text-sm mt-1">
-                Image file is required
+                An image URL link is required
               </span>
             )}
           </div>
@@ -217,10 +214,10 @@ const CreateMeal = () => {
 
           <button
             type="submit"
-            disabled={isUploading}
+            disabled={isSubmitting}
             className="btn btn-primary w-full text-lg mt-4"
           >
-            {isUploading ? (
+            {isSubmitting ? (
               <span className="loading loading-spinner"></span>
             ) : (
               "Add Meal"

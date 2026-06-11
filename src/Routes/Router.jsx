@@ -21,6 +21,10 @@ import ErrorPage from "../Pages/ErrorPage/ErrorPage";
 import Home from "../Components/Home/Home";
 import Payment from "../Pages/Payment/Payment";
 import PaymentSuccess from "../Pages/Payment/PaymentSuccess";
+import AboutPage from "../Pages/AboutPage/AboutPage";
+import Contact from "../Pages/Contact/Contact";
+import Blog from "../Pages/Blog/Blog";
+import BlogDetails from "../Pages/BlogDetails/BlogDetails";
 
 const router = createBrowserRouter([
   // ALL PAGES NOW LIVE HERE (They will all have your Navbar and Footer)
@@ -42,12 +46,28 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "blog",
+        element: <Blog />,
+      },
+      {
+        path: "blog/:id",
+        element: <BlogDetails />,
+      },
+      {
+        path: "about",
+        element: <AboutPage />,
+      },
+      {
         path: "order/:id",
         element: (
           <PrivateRoute>
             <OrderPage />
           </PrivateRoute>
         ),
+      },
+      {
+        path: "contact",
+        element: <Contact />,
       },
       {
         path: "payment/:id",
