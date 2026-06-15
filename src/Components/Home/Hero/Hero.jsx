@@ -1,6 +1,14 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router";
-import { FaCheckCircle } from "react-icons/fa";
+import {
+  FaCheckCircle,
+  FaArrowRight,
+  FaUserPlus,
+  FaConciergeBell,
+  FaUsers,
+  FaTruck,
+  FaStar,
+} from "react-icons/fa";
 
 const Hero = () => {
   return (
@@ -82,13 +90,13 @@ const Hero = () => {
             className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
           >
             <Link to="/meals" className="w-full sm:w-auto">
-              <button className="btn btn-primary btn-lg rounded-xl px-10 w-full sm:w-auto shadow-lg shadow-primary/30 hover:shadow-primary/50 hover:-translate-y-1 border-none transition-all duration-300 text-white font-bold h-[3.5rem]">
-                Explore Meals
+              <button className="btn btn-primary btn-lg rounded-xl px-10 w-full sm:w-auto shadow-lg shadow-primary/30 hover:shadow-primary/50 hover:-translate-y-1 border-none transition-all duration-300 text-white font-bold h-[3.5rem] flex items-center justify-center gap-2">
+                Explore Meals <FaArrowRight />
               </button>
             </Link>
             <Link to="/register" className="w-full sm:w-auto">
-              <button className="btn btn-outline btn-lg rounded-xl px-10 w-full sm:w-auto border-2 hover:-translate-y-1 transition-all duration-300 font-bold bg-base-100 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 h-[3.5rem]">
-                Become a Chef
+              <button className="btn btn-outline btn-lg rounded-xl px-10 w-full sm:w-auto border-2 hover:-translate-y-1 transition-all duration-300 font-bold bg-base-100 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 h-[3.5rem] flex items-center justify-center gap-2">
+                <FaUserPlus /> Become a Chef
               </button>
             </Link>
           </motion.div>
@@ -104,32 +112,33 @@ const Hero = () => {
               <h4 className="text-3xl font-extrabold text-base-content dark:text-white">
                 500<span className="text-primary">+</span>
               </h4>
-              <p className="text-xs font-bold text-base-content/50 dark:text-gray-400 uppercase tracking-wider">
-                Meals Served
+              <p className="flex items-center justify-center lg:justify-start gap-1.5 text-xs font-bold text-base-content/50 dark:text-gray-400 uppercase tracking-wider">
+                <FaConciergeBell className="text-primary text-sm" /> Meals
+                Served
               </p>
             </div>
             <div className="flex flex-col gap-1">
               <h4 className="text-3xl font-extrabold text-base-content dark:text-white">
                 120<span className="text-primary">+</span>
               </h4>
-              <p className="text-xs font-bold text-base-content/50 dark:text-gray-400 uppercase tracking-wider">
-                Local Chefs
+              <p className="flex items-center justify-center lg:justify-start gap-1.5 text-xs font-bold text-base-content/50 dark:text-gray-400 uppercase tracking-wider">
+                <FaUsers className="text-primary text-sm" /> Local Chefs
               </p>
             </div>
             <div className="flex flex-col gap-1">
               <h4 className="text-3xl font-extrabold text-base-content dark:text-white">
                 5k<span className="text-primary">+</span>
               </h4>
-              <p className="text-xs font-bold text-base-content/50 dark:text-gray-400 uppercase tracking-wider">
-                Delivered
+              <p className="flex items-center justify-center lg:justify-start gap-1.5 text-xs font-bold text-base-content/50 dark:text-gray-400 uppercase tracking-wider">
+                <FaTruck className="text-primary text-sm" /> Delivered
               </p>
             </div>
             <div className="flex flex-col gap-1">
               <h4 className="text-3xl font-extrabold text-base-content dark:text-white">
                 4.9
               </h4>
-              <p className="text-xs font-bold text-base-content/50 dark:text-gray-400 uppercase tracking-wider">
-                Avg Rating
+              <p className="flex items-center justify-center lg:justify-start gap-1.5 text-xs font-bold text-base-content/50 dark:text-gray-400 uppercase tracking-wider">
+                <FaStar className="text-amber-400 text-sm" /> Avg Rating
               </p>
             </div>
           </motion.div>

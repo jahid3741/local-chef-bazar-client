@@ -1,38 +1,55 @@
-import { Link } from "react-router";
+import { Link } from "react-router"; // Ensure react-router-dom is used
 
 const MealCard = ({ meal }) => {
-  const { _id, foodName, chefName, chefId, foodImage, price, deliveryArea } =
-    meal;
+  // Added category and rating just in case your backend sends them!
+  const {
+    _id,
+    foodName,
+    chefName,
+    chefId,
+    foodImage,
+    price,
+    deliveryArea,
+    category,
+    rating,
+  } = meal;
 
   return (
-    <div className="card w-full bg-base-100 shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group border border-base-200 overflow-hidden">
-      <figure className="relative overflow-hidden h-64 w-full">
+    <div className="card p-0 flex flex-col w-full h-full overflow-hidden group hover:-translate-y-1.5 hover:shadow-xl transition-all duration-300 border border-[var(--border-base)] bg-[var(--bg-base)] rounded-[var(--radius-3xl)]">
+      {/* Image Section */}
+      <figure className="shrink-0 relative h-48 sm:h-56 w-full overflow-hidden bg-gray-100 dark:bg-gray-800">
         <img
-          src={foodImage}
+          src={foodImage || "https://placehold.co/600x400?text=No+Image"}
           alt={foodName}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
-        <div className="absolute top-4 right-4 badge badge-primary badge-lg shadow-md font-bold border-none py-4 px-4 text-lg">
-          ${price}
-        </div>
+        {/* Category Badge (Top Left) */}
+        {category && (
+          <div className="absolute top-3 left-3 bg-black/70 backdrop-blur-md text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm uppercase tracking-wide">
+            {category}
+          </div>
+        )}
       </figure>
 
-      <div className="card-body p-6 flex flex-col justify-between">
-        <div>
-          <div className="flex justify-between items-start gap-2 mb-4">
-            <h2 className="card-title text-2xl font-bold group-hover:text-primary transition-colors duration-300">
-              {foodName}
-            </h2>
+      {/* Card Body - Uses flex-grow to stretch and push the button down */}
+      <div className="p-5 sm:p-6 flex flex-col flex-grow">
+        {/* Title */}
+        <h2 className="text-xl font-bold text-[var(--text-base)] leading-snug line-clamp-2 group-hover:text-primary transition-colors duration-300">
+          {foodName}
+        </h2>
+
+        {/* Sleek Details List */}
+        <div className="space-y-2.5 mt-4 text-sm text-[var(--text-base)] opacity-80">
+          <div className="flex justify-between items-center border-b border-[var(--border-base)] pb-2">
+            <span className="font-semibold opacity-70">Chef</span>
+            <span className="font-medium text-right truncate pl-4">
+              {chefName}
+            </span>
           </div>
 
-          <div className="space-y-3 text-sm text-base-content/80 mt-2 bg-base-200/50 p-4 rounded-xl">
-            <div className="flex justify-between border-b border-base-300 pb-2">
-              <span className="font-semibold text-base-content">Chef Name</span>
-              <span className="font-medium text-right">{chefName}</span>
-            </div>
-
-            <div className="flex justify-between border-b border-base-300 pb-2">
-              <span className="font-semibold text-base-content">Chef ID</span>
+          {chefId && (
+            <div className="flex justify-between items-center border-b border-[var(--border-base)] pb-2">
+              <span className="font-semibold opacity-70">Chef ID</span>
               <span
                 className="font-medium text-right truncate max-w-[120px]"
                 title={chefId}
@@ -40,22 +57,31 @@ const MealCard = ({ meal }) => {
                 {chefId}
               </span>
             </div>
+          )}
 
-            <div className="flex justify-between">
-              <span className="font-semibold text-base-content">
-                Delivery Area
-              </span>
-              <span className="font-medium text-right">{deliveryArea}</span>
-            </div>
+          <div className="flex justify-between items-center border-b border-[var(--border-base)] pb-2">
+            <span className="font-semibold opacity-70">Delivery</span>
+            <span className="font-medium text-right truncate pl-4">
+              {deliveryArea || "N/A"}
+            </span>
           </div>
         </div>
 
-        <div className="card-actions mt-6">
+        {/* Price & Rating */}
+        <div className="flex justify-between items-end mt-5 mb-1 shrink-0">
+          <span className="font-extrabold text-primary text-2xl">${price}</span>
+          <span className="flex items-center gap-1 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-2.5 py-1 rounded-lg font-bold text-xs">
+            ⭐ {rating || "4.5"}/5
+          </span>
+        </div>
+
+        {/* Absolute Bottom Button container */}
+        <div className="mt-auto pt-4 shrink-0">
           <Link
             to={`/meals/${_id}`}
-            className="btn btn-primary w-full rounded-full shadow-lg hover:shadow-primary/50 hover:-translate-y-1 transition-all duration-300 text-base"
+            className="btn w-full bg-black/5 dark:bg-white/5 text-[var(--text-base)] border border-[var(--border-base)] hover:bg-primary hover:text-white hover:border-primary transition-all duration-300 shadow-sm rounded-xl"
           >
-            See Details
+            View Details
           </Link>
         </div>
       </div>

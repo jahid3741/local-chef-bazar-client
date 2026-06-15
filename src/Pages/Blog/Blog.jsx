@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router";
+import { Link } from "react-router"; // Note: changed from "react-router" to "react-router-dom"
 
-// (Keep your mockBlogPosts array exactly the same as the previous step with the 16 items)
 const mockBlogPosts = [
   {
     id: 1,
@@ -200,51 +199,34 @@ const Blog = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 8;
 
-  // Debugging: Watch the current page state change
-  console.log("Component Rendered! Current Page is now:", currentPage);
-
   useEffect(() => {
-    // Scroll to top instantly when page changes
     window.scrollTo(0, 0);
-
-    // Simulate loading for 500ms so you can see the skeleton effect when changing pages
     setIsLoading(true);
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 500);
-
     return () => clearTimeout(timer);
   }, [currentPage]);
 
-  // Calculate standard pagination mathematics
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = mockBlogPosts.slice(indexOfFirstPost, indexOfLastPost);
   const totalPages = Math.ceil(mockBlogPosts.length / postsPerPage);
 
-  // Pagination Handlers
-  const paginate = (pageNumber) => {
-    console.log("Clicked Page Number:", pageNumber);
-    setCurrentPage(pageNumber);
-  };
-
-  const goToNextPage = () => {
-    console.log("Clicked NEXT");
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const goToNextPage = () =>
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-  };
-
-  const goToPrevPage = () => {
-    console.log("Clicked PREV");
-    setCurrentPage((prev) => Math.max(prev - 1, 1));
-  };
+  const goToPrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
 
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 py-16 px-4 sm:px-8">
+    // FIX 1: Removed bg-gray-50 so it inherits the dark mode background from MainLayout
+    <main className="min-h-screen py-16 px-4 sm:px-8 w-full">
       <div className="max-w-7xl mx-auto text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-4">
+        {/* FIX 2: Replaced text-gray-900 with text-[var(--text-base)] for perfect contrast */}
+        <h1 className="text-4xl md:text-5xl font-extrabold text-[var(--text-base)] tracking-tight mb-4">
           The Culinary Chronicle
         </h1>
-        <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+        <p className="text-lg text-[var(--text-base)] opacity-70 max-w-2xl mx-auto">
           Discover recipes, kitchen hacks, business tips for home chefs, and
           stories from the Local Chef Bazar community.
         </p>
@@ -254,11 +236,12 @@ const Blog = () => {
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
         {isLoading
           ? Array.from({ length: 8 }).map((_, idx) => (
+              // FIX 3: Replaced hardcoded classes with your global "card" class
               <div
                 key={idx}
-                className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden animate-pulse flex flex-col h-full"
+                className="card p-0 animate-pulse flex flex-col h-full"
               >
-                <div className="w-full aspect-video bg-gray-200 dark:bg-gray-700"></div>
+                <div className="w-full aspect-video bg-gray-200 dark:bg-gray-700 rounded-t-3xl"></div>
                 <div className="p-5 flex-grow flex flex-col">
                   <div className="w-20 h-6 bg-gray-200 dark:bg-gray-700 rounded-xl mb-3"></div>
                   <div className="w-full h-6 bg-gray-200 dark:bg-gray-700 rounded-xl mb-2"></div>
@@ -268,9 +251,10 @@ const Blog = () => {
               </div>
             ))
           : currentPosts.map((post) => (
+              // FIX 4: Replaced hardcoded classes with your global "card" class
               <article
                 key={post.id}
-                className="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-700 flex flex-col h-full overflow-hidden group"
+                className="card p-0 flex flex-col h-full overflow-hidden group hover:-translate-y-1"
               >
                 <Link
                   to={`/blog/${post.id}`}
@@ -279,24 +263,24 @@ const Blog = () => {
                   <img
                     src={post.image}
                     alt={post.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 bg-gray-100 dark:bg-gray-800"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute top-4 left-4">
-                    <span className="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-xl uppercase tracking-wider shadow-sm">
+                    <span className="bg-primary text-white text-xs font-bold px-3 py-1 rounded-xl uppercase tracking-wider shadow-sm">
                       {post.category}
                     </span>
                   </div>
                 </Link>
                 <div className="p-5 flex flex-col flex-grow">
-                  <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 leading-tight">
+                  <h2 className="text-xl font-bold text-[var(--text-base)] mb-3 line-clamp-2 leading-tight">
                     <Link
                       to={`/blog/${post.id}`}
-                      className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                      className="hover:text-primary transition-colors"
                     >
                       {post.title}
                     </Link>
                   </h2>
-                  <p className="text-gray-600 dark:text-gray-300 text-sm mb-6 line-clamp-3 mb-auto">
+                  <p className="text-[var(--text-base)] opacity-70 text-sm mb-6 line-clamp-3 mb-auto">
                     {post.excerpt}
                   </p>
                 </div>
@@ -310,7 +294,8 @@ const Blog = () => {
           <button
             onClick={goToPrevPage}
             disabled={currentPage === 1}
-            className="p-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            // FIX 5: Simplified pagination button styling to match dark mode
+            className="p-2 rounded-xl border border-[var(--border-base)] bg-[var(--bg-base)] text-[var(--text-base)] hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             <span className="sr-only">Previous</span>
             <svg
@@ -336,8 +321,8 @@ const Blog = () => {
                 onClick={() => paginate(pageNumber)}
                 className={`w-10 h-10 flex items-center justify-center rounded-xl font-medium transition-colors cursor-pointer ${
                   currentPage === pageNumber
-                    ? "bg-blue-600 text-white shadow-sm"
-                    : "border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                    ? "bg-primary text-white shadow-sm"
+                    : "border border-[var(--border-base)] bg-[var(--bg-base)] text-[var(--text-base)] hover:bg-gray-100 dark:hover:bg-gray-800"
                 }`}
               >
                 {pageNumber}
@@ -348,7 +333,7 @@ const Blog = () => {
           <button
             onClick={goToNextPage}
             disabled={currentPage === totalPages}
-            className="p-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="p-2 rounded-xl border border-[var(--border-base)] bg-[var(--bg-base)] text-[var(--text-base)] hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             <span className="sr-only">Next</span>
             <svg

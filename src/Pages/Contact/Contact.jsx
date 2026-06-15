@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -10,19 +9,17 @@ const Contact = () => {
   });
 
   const [errors, setErrors] = useState({});
-  const [status, setStatus] = useState("idle"); // 'idle' | 'loading' | 'success' | 'error'
+  const [status, setStatus] = useState("idle");
 
-  // Handle Input Changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    // Clear error when user starts typing
+
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
-  // Client-Side Validation
   const validateForm = () => {
     const newErrors = {};
     if (!formData.name.trim()) newErrors.name = "Name is required.";
@@ -40,7 +37,6 @@ const Contact = () => {
     return newErrors;
   };
 
-  // Form Submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formErrors = validateForm();
@@ -54,9 +50,6 @@ const Contact = () => {
 
     // Simulate API Call to your Express Backend
     try {
-      // Example implementation for your actual backend:
-      // await axios.post(`${import.meta.env.VITE_API_URL}/api/contact`, formData);
-
       await new Promise((resolve) => setTimeout(resolve, 1500)); // Mock delay
       setStatus("success");
       setFormData({ name: "", email: "", subject: "", message: "" }); // Reset form
@@ -66,14 +59,16 @@ const Contact = () => {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 py-16 px-4 sm:px-8">
+    // FIX 1: Removed hardcoded background so it inherits from MainLayout
+    <main className="min-h-screen transition-colors duration-300 py-16 px-4 sm:px-8 w-full">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-4">
+          {/* FIX 2: Used text-[var(--text-base)] */}
+          <h1 className="text-4xl font-extrabold text-[var(--text-base)] mb-4">
             Get in Touch
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg text-[var(--text-base)] opacity-70 max-w-2xl mx-auto">
             Have a question about an order, want to become a chef, or just want
             to say hello? Drop us a message and our support team will get back
             to you within 24 hours.
@@ -83,14 +78,16 @@ const Contact = () => {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Contact Information (Left Column - Span 2) */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+            {/* FIX 3: Replaced hardcoded div with global "card" class */}
+            <div className="card p-8 border-none bg-black/5 dark:bg-white/5">
+              <h3 className="text-2xl font-bold text-[var(--text-base)] mb-6">
                 Contact Information
               </h3>
 
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center shrink-0">
+                  {/* FIX 4: Used global primary color instead of hardcoded blue */}
+                  <div className="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center shrink-0">
                     <svg
                       className="w-5 h-5"
                       fill="none"
@@ -113,10 +110,10 @@ const Contact = () => {
                     </svg>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 dark:text-white">
+                    <h4 className="font-semibold text-[var(--text-base)]">
                       Head Office
                     </h4>
-                    <p className="text-gray-600 dark:text-gray-400 mt-1">
+                    <p className="text-[var(--text-base)] opacity-70 mt-1">
                       Dhanmondi, Dhaka, Bangladesh
                       <br />
                       Local Chef Bazar HQ
@@ -125,7 +122,7 @@ const Contact = () => {
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center shrink-0">
                     <svg
                       className="w-5 h-5"
                       fill="none"
@@ -142,10 +139,10 @@ const Contact = () => {
                     </svg>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 dark:text-white">
+                    <h4 className="font-semibold text-[var(--text-base)]">
                       Email Us
                     </h4>
-                    <p className="text-gray-600 dark:text-gray-400 mt-1">
+                    <p className="text-[var(--text-base)] opacity-70 mt-1">
                       support@localchefbazar.com
                       <br />
                       partnerships@localchefbazar.com
@@ -154,7 +151,7 @@ const Contact = () => {
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center shrink-0">
                     <svg
                       className="w-5 h-5"
                       fill="none"
@@ -171,10 +168,10 @@ const Contact = () => {
                     </svg>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 dark:text-white">
+                    <h4 className="font-semibold text-[var(--text-base)]">
                       Call Us
                     </h4>
-                    <p className="text-gray-600 dark:text-gray-400 mt-1">
+                    <p className="text-[var(--text-base)] opacity-70 mt-1">
                       +880 1234-567890
                       <br />
                       Mon - Fri, 9:00 AM - 6:00 PM
@@ -185,12 +182,10 @@ const Contact = () => {
             </div>
           </div>
 
-          {/* Contact Form (Right Column - Span 3) */}
           <div className="lg:col-span-3">
-            <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
-              {/* Success Message */}
+            <div className="card p-8">
               {status === "success" && (
-                <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 rounded-xl flex items-center gap-3">
+                <div className="mb-6 p-4 bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 rounded-xl flex items-center gap-3 font-medium">
                   <svg
                     className="w-5 h-5"
                     fill="currentColor"
@@ -209,29 +204,29 @@ const Contact = () => {
 
               {/* Error Message */}
               {status === "error" && (
-                <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-xl">
+                <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 rounded-xl font-medium">
                   Something went wrong. Please try again later.
                 </div>
               )}
 
               <form onSubmit={handleSubmit} className="space-y-5">
-                {/* Form Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   {/* Name Input */}
                   <div>
                     <label
                       htmlFor="name"
-                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                      className="block text-sm font-medium text-[var(--text-base)] opacity-80 mb-1"
                     >
                       Full Name
                     </label>
+
                     <input
                       type="text"
                       id="name"
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${errors.name ? "border-red-500" : "border-gray-200 dark:border-gray-700"}`}
+                      className={`input w-full ${errors.name ? "border-red-500" : ""}`}
                       placeholder="Md Jahidul Islam"
                     />
                     {errors.name && (
@@ -243,7 +238,7 @@ const Contact = () => {
                   <div>
                     <label
                       htmlFor="email"
-                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                      className="block text-sm font-medium text-[var(--text-base)] opacity-80 mb-1"
                     >
                       Email Address
                     </label>
@@ -253,7 +248,7 @@ const Contact = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${errors.email ? "border-red-500" : "border-gray-200 dark:border-gray-700"}`}
+                      className={`input w-full ${errors.email ? "border-red-500" : ""}`}
                       placeholder="hello@example.com"
                     />
                     {errors.email && (
@@ -268,7 +263,7 @@ const Contact = () => {
                 <div>
                   <label
                     htmlFor="subject"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    className="block text-sm font-medium text-[var(--text-base)] opacity-80 mb-1"
                   >
                     Subject
                   </label>
@@ -278,7 +273,7 @@ const Contact = () => {
                     name="subject"
                     value={formData.subject}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${errors.subject ? "border-red-500" : "border-gray-200 dark:border-gray-700"}`}
+                    className={`input w-full ${errors.subject ? "border-red-500" : ""}`}
                     placeholder="How can we help you?"
                   />
                   {errors.subject && (
@@ -288,11 +283,10 @@ const Contact = () => {
                   )}
                 </div>
 
-                {/* Message Textarea */}
                 <div>
                   <label
                     htmlFor="message"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    className="block text-sm font-medium text-[var(--text-base)] opacity-80 mb-1"
                   >
                     Message
                   </label>
@@ -302,7 +296,7 @@ const Contact = () => {
                     rows="5"
                     value={formData.message}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors resize-none ${errors.message ? "border-red-500" : "border-gray-200 dark:border-gray-700"}`}
+                    className={`input w-full py-3 h-auto resize-none ${errors.message ? "border-red-500" : ""}`}
                     placeholder="Write your message here..."
                   ></textarea>
                   {errors.message && (
@@ -313,10 +307,11 @@ const Contact = () => {
                 </div>
 
                 {/* Submit Button */}
+                {/* FIX 7: Replaced with global "btn" class and primary color */}
                 <button
                   type="submit"
                   disabled={status === "loading"}
-                  className="w-full sm:w-auto px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="btn bg-primary text-white hover:bg-primary/90 w-full sm:w-auto flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   {status === "loading" ? (
                     <>
