@@ -141,7 +141,7 @@ const MealDetails = () => {
                 {foodName}
               </h1>
               <div className="badge badge-primary py-4 px-6 text-xl sm:text-2xl font-bold rounded-xl text-white shrink-0 shadow-sm self-start">
-                ৳ {price}
+                $ {price}
               </div>
             </div>
 
