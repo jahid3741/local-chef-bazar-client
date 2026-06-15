@@ -1,34 +1,8 @@
-import { useNavigate } from "react-router";
-import Swal from "sweetalert2";
-import useAuth from "../../../Hooks/UseAuth/UseAuth";
+import { Link } from "react-router";
 
 const MealCard = ({ meal }) => {
-  const navigate = useNavigate();
-  const { user } = useAuth();
-
-  const {
-    _id,
-    foodName,
-    chefName,
-    chefId,
-    foodImage,
-    price,
-    rating,
-    deliveryArea,
-  } = meal;
-
-  const handleDetails = () => {
-    if (!user) {
-      Swal.fire({
-        icon: "warning",
-        title: "Please login first",
-        text: "You need to login to view details",
-      });
-      navigate("/login");
-      return;
-    }
-    navigate(`/meals/${_id}`);
-  };
+  const { _id, foodName, chefName, chefId, foodImage, price, deliveryArea } =
+    meal;
 
   return (
     <div className="card w-full bg-base-100 shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group border border-base-200 overflow-hidden">
@@ -77,12 +51,12 @@ const MealCard = ({ meal }) => {
         </div>
 
         <div className="card-actions mt-6">
-          <button
-            onClick={handleDetails}
+          <Link
+            to={`/meals/${_id}`}
             className="btn btn-primary w-full rounded-full shadow-lg hover:shadow-primary/50 hover:-translate-y-1 transition-all duration-300 text-base"
           >
             See Details
-          </button>
+          </Link>
         </div>
       </div>
     </div>

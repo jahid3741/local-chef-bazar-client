@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router"; // Note: Updated to react-router-dom
+import { Link, NavLink } from "react-router"; 
 import { useEffect, useState } from "react";
 import { FaUtensils, FaSun, FaMoon, FaSignOutAlt } from "react-icons/fa";
 import Swal from "sweetalert2";
@@ -98,15 +98,15 @@ const Navbar = () => {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="sticky top-0 z-50 bg-base-100/80 backdrop-blur-xl border-b border-base-200 shadow-sm"
     >
-      <div className="navbar max-w-7xl mx-auto px-4 lg:px-8 h-20">
+      <div className="navbar max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 h-20">
         {/* LEFT SECTION - Mobile Menu & Logo */}
-        <div className="navbar-start w-full lg:w-1/3 justify-between lg:justify-start">
+        <div className="navbar-start w-auto lg:w-1/3 flex-shrink-0">
           {/* Mobile Hamburger Menu */}
           <div className="dropdown lg:hidden">
             <div
               tabIndex={0}
               role="button"
-              className="btn btn-ghost btn-circle hover:bg-base-200"
+              className="btn btn-ghost btn-circle hover:bg-base-200 mr-1"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -130,44 +130,36 @@ const Navbar = () => {
               {/* Shows all links including Dashboard if logged in */}
               {mainNavLinks}
 
-              <div className="divider my-1"></div>
-
-              {/* Mobile Logout / Auth Buttons */}
-              {user ? (
-                <li>
-                  <button
-                    onClick={handleLogout}
-                    className="text-error font-semibold px-4 py-2 hover:bg-error/10 rounded-xl flex gap-2 items-center"
-                  >
-                    <FaSignOutAlt /> Logout
-                  </button>
-                </li>
-              ) : (
-                <div className="flex flex-col gap-3 mt-2 px-2">
-                  <Link
-                    to="/login"
-                    className="btn btn-sm btn-ghost bg-base-200 rounded-xl w-full"
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    to="/register"
-                    className="btn btn-sm btn-primary rounded-xl text-white shadow-md shadow-primary/30 w-full"
-                  >
-                    Join as Chef
-                  </Link>
-                </div>
+              {/* Mobile Login / Register Buttons (Only shows if logged out) */}
+              {!user && (
+                <>
+                  <div className="divider my-1"></div>
+                  <div className="flex flex-col gap-3 mt-2 px-2">
+                    <Link
+                      to="/login"
+                      className="btn btn-sm btn-ghost bg-base-200 rounded-xl w-full"
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      to="/register"
+                      className="btn btn-sm btn-primary rounded-xl text-white shadow-md shadow-primary/30 w-full"
+                    >
+                      Register
+                    </Link>
+                  </div>
+                </>
               )}
             </ul>
           </div>
 
           {/* Branding / Logo */}
-          <Link to="/" className="flex items-center gap-3 group ml-2 lg:ml-0">
-            <div className="p-2.5 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-xl group-hover:scale-110 transition-all duration-300 shadow-inner">
-              <FaUtensils className="text-2xl text-primary drop-shadow-sm" />
+          <Link to="/" className="flex items-center gap-2 sm:gap-3 group">
+            <div className="p-2 sm:p-2.5 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-xl group-hover:scale-110 transition-all duration-300 shadow-inner">
+              <FaUtensils className="text-xl sm:text-2xl text-primary drop-shadow-sm" />
             </div>
             <div className="flex flex-col">
-              <h2 className="text-xl lg:text-2xl font-extrabold tracking-tight text-base-content group-hover:text-primary transition-colors duration-300">
+              <h2 className="text-lg sm:text-xl lg:text-2xl font-extrabold tracking-tight text-base-content group-hover:text-primary transition-colors duration-300 whitespace-nowrap">
                 Local Chef Bazar
               </h2>
               <p className="text-[10px] font-bold tracking-widest uppercase text-base-content/50 hidden xl:block mt-0.5">
@@ -183,24 +175,24 @@ const Navbar = () => {
         </div>
 
         {/* RIGHT SECTION - Actions & Profile */}
-        <div className="navbar-end flex w-auto lg:w-1/3 gap-3 justify-end items-center">
+        <div className="navbar-end flex-grow lg:w-1/3 flex gap-2 sm:gap-3 justify-end items-center">
           {/* THEME TOGGLE BUTTON */}
-          <label className="swap swap-rotate btn btn-ghost btn-circle hover:bg-base-200">
+          <label className="swap swap-rotate btn btn-ghost btn-circle btn-sm sm:btn-md hover:bg-base-200">
             <input
               type="checkbox"
               onChange={handleThemeToggle}
               checked={theme === "dark"}
             />
-            <FaSun className="swap-off fill-current w-5 h-5 text-amber-500" />
-            <FaMoon className="swap-on fill-current w-5 h-5 text-blue-300" />
+            <FaSun className="swap-off fill-current w-4 h-4 sm:w-5 sm:h-5 text-amber-500" />
+            <FaMoon className="swap-on fill-current w-4 h-4 sm:w-5 sm:h-5 text-blue-300" />
           </label>
 
-          {/* Authentication State (Desktop) */}
+          {/* Authentication State (FULLY RESPONSIVE FOR ALL DEVICES) */}
           {user ? (
-            /* Simple User Badge + Logout (No Dropdown) */
-            <div className="hidden lg:flex items-center gap-3 bg-base-200/50 py-1.5 px-2 rounded-full border border-base-200 shadow-sm">
+            /* User Badge + Logout (Visible on Mobile, Tablet, and Desktop) */
+            <div className="flex items-center gap-1 sm:gap-3 bg-base-200/50 py-1 sm:py-1.5 px-1 sm:px-2 rounded-full border border-base-200 shadow-sm">
               <div className="avatar">
-                <div className="w-9 h-9 rounded-full ring-2 ring-primary/30 ring-offset-2 ring-offset-base-100 shadow-md">
+                <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-full ring-2 ring-primary/30 ring-offset-1 sm:ring-offset-2 ring-offset-base-100 shadow-md">
                   <img
                     src={
                       user?.photoURL ||
@@ -212,13 +204,13 @@ const Navbar = () => {
               </div>
               <button
                 onClick={handleLogout}
-                className="btn btn-ghost btn-sm text-error hover:bg-error/10 hover:text-error rounded-full px-4 font-bold mr-1 flex items-center gap-2"
+                className="btn btn-ghost btn-xs sm:btn-sm text-error hover:bg-error/10 hover:text-error rounded-full px-2 sm:px-4 font-bold flex items-center gap-1.5"
               >
                 Logout
               </button>
             </div>
           ) : (
-            /* Logged Out Buttons (Desktop) */
+            /* Logged Out Buttons (Desktop only - Mobile is in Hamburger) */
             <div className="hidden lg:flex items-center gap-3">
               <Link
                 to="/login"
